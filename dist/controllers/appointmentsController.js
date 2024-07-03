@@ -9,28 +9,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cancelAppointmentController = exports.newAppointmentController = exports.appointmentController = exports.allAppointmentsController = void 0;
-// controladores para estas rutas:
+exports.cancelAppointmentController = exports.newAppointmentController = exports.appointmentByIdController = exports.allAppointmentsController = void 0;
+const appointmentsService_1 = require("../services/appointmentsService");
 // GET /appointments => Obtener el listado de todos los turnos de todos los usuarios.
-//
-// GET /appointment => Obtener el detalle de un turno específico.
-//
-// POST /appointment/schedule => Agendar un nuevo turno.
-//
-// PUT /appointment/cancel => Cambiar el estatus de un turno a “cancelled”.
 const allAppointmentsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Todos los turnos listados");
+    const appointments = yield (0, appointmentsService_1.allAppointmentsService)();
+    res.status(200).json(appointments);
 });
 exports.allAppointmentsController = allAppointmentsController;
-const appointmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Detalle del turno");
+// GET /appointment => Obtener el detalle de un turno específico.
+const appointmentByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const appointmaint = yield (0, appointmentsService_1.appointmentByIdService)(parseInt(id));
+    res.status(200).json(appointmaint);
 });
-exports.appointmentController = appointmentController;
+exports.appointmentByIdController = appointmentByIdController;
+// POST /appointment/schedule => Agendar un nuevo turno.
 const newAppointmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("nuevo turno agendado");
+    const { date, time, userId } = req.body;
+    try {
+        const newAppointment = yield (0, appointmentsService_1.createAppointmentService)({
+            date,
+            time,
+            userId,
+        });
+        res.status(201).json(newAppointment);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 });
 exports.newAppointmentController = newAppointmentController;
+// PUT /appointment/cancel => Cambiar el estatus de un turno a “cancelled”.
 const cancelAppointmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Turno cancelado");
+    try {
+        const { id } = req.params;
+        const cancelledAppointment = yield (0, appointmentsService_1.cancelAppointmentService)(Number(id));
+        return res.status(200).json(cancelledAppointment);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 exports.cancelAppointmentController = cancelAppointmentController;

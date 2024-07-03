@@ -9,41 +9,73 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.deleteUser = exports.getUsers = exports.createUser = void 0;
+exports.loginUser = exports.getUserById = exports.getUsers = exports.createUser = void 0;
 const userService_1 = require("../services/userService");
-// GET /users => Obtener el listado de todos los usuarios.
-//
-// GET /users/:id => Obtener el detalle de un usuario específico.
-//
+const credentialsService_1 = require("../services/credentialsService");
+const data_source_1 = require("../config/data-source");
 // POST /users/register => Registro de un nuevo usuario.
-//
-// POST /users/login => Login del usuario a la aplicación.
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, email, active } = req.body;
-    const newUser = yield (0, userService_1.createUserService)({ name, email, active });
-    res.status(201).json(newUser);
+    try {
+        const { name, email, birthdate, nDni, username, password } = req.body;
+        const newUser = yield (0, userService_1.createUserService)({
+            name,
+            email,
+            birthdate,
+            nDni,
+            username,
+            password,
+        });
+        res.status(201).json(newUser);
+    }
+    catch (error) {
+        res
+            .status(400)
+            .json({ error: error.message || "Los datos son incorrectos" });
+    }
 });
 exports.createUser = createUser;
+// GET /users => Obtener el listado de todos los usuarios.
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield (0, userService_1.getUsersService)();
-    res.status(200).json(users);
+    try {
+        console.log("<<<<<<<<<<<<<<<<<<< getUsers >>>>>>>>>>>>>>>>>");
+        const users = yield (0, userService_1.getUsersService)();
+        console.log("💚 users:", users);
+        res.status(200).json(users);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 exports.getUsers = getUsers;
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.body;
-    yield (0, userService_1.deleteUserService)(id);
-    res.status(200).json({ message: "usuario eliminado correctamente" });
-});
-exports.deleteUser = deleteUser;
 // GET /users/:id => Obtener el detalle de un usuario específico.
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.body;
-    const user = yield (0, userService_1.getUserService)(id);
-    res.status(200).json(user);
+    try {
+        const { id } = req.params;
+        const user = yield (0, userService_1.getUserByIdService)(Number(id));
+        res.status(200).json(user);
+    }
+    catch (error) {
+        res.status(404).json({ message: error.message + "Usuario no encontrado" });
+    }
 });
 exports.getUserById = getUserById;
 // POST /users/login => Login del usuario a la aplicación.
-// export const loginUser = async (req: Request, res: Response) => {
-//   const { id } = req.body;
-//   await
-// };
+const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { username, password } = req.body;
+        const credencial = (0, credentialsService_1.validateCredentialService)({ username, password });
+        const user = yield data_source_1.UserModel.findOneBy({
+            credentials: {
+                id: (yield credencial).id,
+            },
+        });
+        res.status(200).json({
+            login: true,
+            user,
+        });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+exports.loginUser = loginUser;

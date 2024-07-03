@@ -25,7 +25,7 @@ export class User {
   email: string;
 
   @Column()
-  birthdate: Date;
+  birthdate: Date | null;
 
   @Column()
   nDni: string;

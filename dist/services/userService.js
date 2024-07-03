@@ -9,41 +9,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserService = exports.deleteUserService = exports.getUsersService = exports.createUserService = void 0;
+exports.getUserByIdService = exports.getUsersService = exports.createUserService = void 0;
+const data_source_1 = require("../config/data-source");
+const credentialsService_1 = require("./credentialsService");
 let users = [];
-let id = 1;
 const createUserService = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    //recibir los datos del usuario
-    // crear un nuevo usuario
-    // incluir el nuevo ususraio dentro del arreglo
-    // retornar el objeto creado
-    const newUser = {
-        id: id,
-        name: userData.name,
-        email: userData.email,
-        active: userData.active,
-    };
-    users.push(newUser);
-    id++;
+    const newCredentials = yield (0, credentialsService_1.credentialsService)({
+        username: userData.username,
+        password: userData.password,
+    });
+    console.log("💙 newCredentials:", newCredentials);
+    const newUser = yield data_source_1.UserModel.create(userData);
+    yield data_source_1.UserModel.save(newUser);
+    console.log("🧡 newUser:", newUser);
+    newUser.credentials = newCredentials;
+    yield data_source_1.UserModel.save(newUser);
+    console.log("❤ newUser:", newUser);
     return newUser;
 });
 exports.createUserService = createUserService;
 const getUsersService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield data_source_1.UserModel.find();
     return users;
 });
 exports.getUsersService = getUsersService;
-const deleteUserService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    users = users.filter((user) => user.id !== id);
-});
-exports.deleteUserService = deleteUserService;
-const getUserService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = users.find((user) => user.id === id);
+const getUserByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield data_source_1.UserModel.findOne({
+        where: { id },
+        relations: ["appointment"],
+    });
     if (user) {
         return user;
     }
     else {
-        // Handle the case where user is not found
-        throw new Error("User not found");
+        throw new Error("No se encontró el usuario");
     }
 });
-exports.getUserService = getUserService;
+exports.getUserByIdService = getUserByIdService;

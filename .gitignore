@@ -1,2 +1,87 @@
+# Archivos de compilación y ejecución
+*.o
+*.out
+*.exe
+
+# Archivos de respaldo y temporales
+*~
+*.swp
+*.log
+
+# Archivos de configuración específicos de IDEs y editores comunes
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Dependencias y directorios de módulos generados
+/node_modules/
+/bower_components/
+
+# Archivos de configuración específicos para lenguajes
+*.pyc
+__pycache__/
+*.class
+
+# Archivos de configuración específicos para entornos de desarrollo
 .env
-node_modules
+.env.local
+
+# Logs y archivos generados por el sistema
+logs/
+*.log
+npm-debug.log*
+
+# Otros archivos específicos de aplicaciones web
+/build/
+.DS_Store
+
+# Configuración específica para sistemas operativos
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos de configuración específicos para PHP
+/.phpunit.result.cache
+
+# Archivos de configuración específicos para Java
+*.class
+
+# Archivos de configuración específicos para C#
+*.suo
+*.user
+*.sln.docstates
+
+# Archivos de configuración específicos para Android
+/build/
+.gradle/
+/local.properties
+
+# Archivos de configuración específicos para Ruby
+*.gem
+.bundle/
+
+# Archivos de configuración específicos para Node.js
+node_modules/
+npm-debug.log*
+
+# Archivos de configuración específicos para TypeScript
+*.tsbuildinfo
+
+# Archivos específicos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archivos específicos de Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos específicos de Linux
+*~
+
+# Archivos de configuración específicos para Docker
+.dockerignore
+.dockerenv
+ß

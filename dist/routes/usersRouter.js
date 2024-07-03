@@ -13,8 +13,8 @@ const usersRouter = express_1.default.Router();
 // POST /users/register => Registro de un nuevo usuario.
 //
 // POST /users/login => Login del usuario a la aplicación.
-usersRouter.get("/users/details/:id", usersController_1.getUserById);
-usersRouter.get("/users", usersController_1.getUsers);
-usersRouter.post("/users/register", usersController_1.createUser);
-usersRouter.post("/users/login");
+usersRouter.get("/details/:id", usersController_1.getUserById);
+usersRouter.get("/list", usersController_1.getUsers);
+usersRouter.post("/register", usersController_1.createUser);
+usersRouter.post("/login", usersController_1.loginUser);
 exports.default = usersRouter;
